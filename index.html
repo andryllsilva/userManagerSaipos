@@ -153,7 +153,7 @@
                       <th>Ações</th>
                     </tr>
                   </thead>
-                  <tbody id="tableUser">
+                  <tbody id="table-users">
                   </tbody>
                 </table>
               </div>
@@ -499,18 +499,20 @@
                 </div>
                 <!-- /.box-body -->
                 <div class="box-footer">
-                  <button type="submit" class="btn btn-success">Salvar</button>
+                  <button type="submit" class="btn btn-primary">Salvar</button>
+                  <button type="button" class="btn btn-default btn-cancel">Cancelar</button>
+
                 </div>
               </form>
             </div>
 
-            <div class="box box-primary" style="display: none;">
+            <div class="box box-primary" id='box-user-update' style="display: none;">
               <div class="box-header with-border">
                 <h3 class="box-title">Editar Usuários</h3>
               </div>
               <!-- /.box-header -->
               <!-- form start -->
-              <form role="form" id="form-user-uptade">
+              <form role="form" id="form-user-update">
                 <div class="box-body">
                   <div class="form-group">
                     <label for="exampleInputName">Nome</label>
@@ -832,9 +834,7 @@
     </footer>
 
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
+  
   <script src="utils/Utils.js"></script>
   <script src="models/User.js"></script>
   <script src="controllers/UserController.js"></script>
