@@ -5,14 +5,14 @@ class UserController {
         this.formEl = document.getElementById(formId);
         this.tableEl = document.getElementById(tableId);
 
-       
+
         this.submit();
         this.onEditCancel()
 
     }
 
-    onEditCancel(){
-        document.querySelector(".btn-defaut").addEventListener('click', (e)=>{
+    onEditCancel() {
+        document.querySelector(".btn-defaut").addEventListener('click', (e) => {
             this.showPanelCreate();
         })
     }
@@ -28,7 +28,7 @@ class UserController {
 
             btn.disabled = true;
 
-    
+
 
             if (!value) {
                 btn.disabled = false;
@@ -53,7 +53,7 @@ class UserController {
     getPhoto() {
 
         return new Promise((resolve, reject) => {
-            let fileReard = new FileReader();
+            let fileReader = new FileReader();
 
             let elements = [...this.formEl.elements].filter(item => {
                 if (item.name === "photo") {
@@ -63,18 +63,18 @@ class UserController {
 
             let file = elements[0].files[0];
 
-            fileReard.onload = () => {
-                resolve(fileReard.result);
+            fileReader.onload = () => {
+                resolve(fileReader.result);
             }
 
-            fileReard.onerror = (e) => {
+            fileReader.onerror = (e) => {
                 reject(e)
             }
 
-         
+
 
             if (file) {
-                fileReard.readAsDataURL(file)
+                fileReader.readAsDataURL(file)
             } else {
                 resolve('dist/profile-user.png')
             }
@@ -98,7 +98,7 @@ class UserController {
             }
 
             if (field.name == "gender") {
-                if (field.checked === true) { // ou apenas field.checked
+                if (field.checked) {
                     user[field.name] = field.name;
                 }
 
@@ -126,11 +126,9 @@ class UserController {
             );
         }
 
-
-
     }
 
-    addLine(dataUser, tableId) {
+    addLine(dataUser) {
 
         let tr = document.createElement('tr');
 
@@ -149,49 +147,64 @@ class UserController {
             </td>
         `;
 
-        tr.querySelector(".btn-edit").addEventListener('click', e=>{
+        tr.querySelector(".btn-edit").addEventListener('click', e => {
             let json = JSON.parse(tr.dataset.user);
             let form = document.querySelector("#form-user-uptade");
 
-            for (let name in json){
-               let field = form.querySelector("[name=" + name.replace("_", "") + "]");
+            for (let name in json) {
+                let field = form.querySelector("[name=" + name.replace("_", "") + "]");
 
-               if(field){
-                if(field.type == 'file') continue
-                field.value = json[name];
-               } 
-               
+                if (field) {
+                    if (field.type == 'file') continue;
+                    switch (field.type) {
+                        case 'file':
+                            continue;
+                        case 'radio':
+                            field = form.querySelector("[name=" + name.replace("_", "") + "][value" + json[name] + "]")
+                            field.checked = true;
+                            break;
+                        case 'checkbox':
+                            field.checked = json[name];
+                            break;
+                        default:
+                            field.value = json[name];
+
+                    }
+
+                    field.value = json[name];
+                }
+
             }
 
-            this.showPanelUptade()
+            this.showPanelUpdate()
 
         })
 
         this.tableEl.appendChild(tr);
 
-        this.uptadeCount();
+        this.updateCount();
 
     }
 
-    showPanelCreate(){
+    showPanelCreate() {
         const boxpost = document.querySelector(".box-success")
         boxpost.style = "display:block"
         const boxput = document.querySelector(".box-primary")
         boxput.style = "display:none"
     }
 
-    showPanelUptade(){
+    showPanelUpdate() {
         const boxpost = document.querySelector(".box-success")
         boxpost.style = "display:none"
         const boxput = document.querySelector(".box-primary")
         boxput.style = "display:block"
     }
 
-    uptadeCount() {
+    updateCount() {
 
         let numberUser = 0;
         let numberAdmin = 0;
-        [...this.tableEl.children].forEach(tr=> {
+        [...this.tableEl.children].forEach(tr => {
             numberUser++;
             let users = JSON.parse(tr.dataset.user);
             if (users._admin) {
