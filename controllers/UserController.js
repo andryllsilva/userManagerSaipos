@@ -30,7 +30,7 @@ class UserController {
 
             let index = this.formUpdateEl.dataset.trIndex
 
-            tr = this.tableEl.rows[index];
+            let tr = this.tableEl.rows[index];
 
             tr.dataset.user = JSON.stringify(value)
 
@@ -190,7 +190,7 @@ class UserController {
 
         tr.querySelector(".btn-edit").addEventListener('click', e => {
             let json = JSON.parse(tr.dataset.user);
-            let form = document.querySelector("#form-user-uptade");
+            let form = document.querySelector("#form-user-update");
             form.dataset.trIndex = tr.sectionRowIndex;
 
             for (let name in json) {
@@ -233,7 +233,7 @@ class UserController {
     addEventsTr(tr) {
         tr.querySelector(".btn-edit").addEventListener('click', e => {
             let json = JSON.parse(tr.dataset.user);
-            let form = document.querySelector("#form-user-uptade");
+            let form = document.querySelector("#form-user-update");
             form.dataset.trIndex = tr.sectionRowIndex;
 
             for (let name in json) {
@@ -281,18 +281,18 @@ class UserController {
 
     updateCount() {
 
-        let numberUser = 0;
+        let numberUsers = 0;
         let numberAdmin = 0;
         [...this.tableEl.children].forEach(tr => {
-            numberUser++;
+            numberUsers++;
             let users = JSON.parse(tr.dataset.user);
             if (users._admin) {
                 numberAdmin++
             }
         })
 
-        document.querySelector('#number-User').innerHTML = numberUser;
-        document.querySelector('#number-Admin').innerHTML = numberAdmin
+        document.querySelector('#number-users').innerHTML = numberUsers;
+        document.querySelector('#number-users-admin').innerHTML = numberAdmin
     }
 
 }
