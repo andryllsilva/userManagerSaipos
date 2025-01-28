@@ -53,7 +53,7 @@ class UserController {
                     user.loadFromJSON(result);
 
                     user.save();
-                    
+
                     this.getTr(user, tr);
 
                     this.addEventsTr(tr);
@@ -186,22 +186,10 @@ class UserController {
 
     }
 
-    getUsersStorage(){
-        let users = [];
-        
-        if(localStorage.getItem('users')){
+    selectAll() {
+        let users = User.getUsersStorage()
 
-            users = JSON.parse(localStorage.getItem('users'))
-
-        }
-
-        return users
-    }
-
-    selectAll(){
-        let users = this.getUsersStorage()
-
-        users.forEach(dataUser =>{
+        users.forEach(dataUser => {
 
             let user = new User();
 
@@ -211,11 +199,11 @@ class UserController {
     }
 
 
-    getTr(dataUser, tr = null){
-       if(tr === null) tr = document.createElement('tr');
+    getTr(dataUser, tr = null) {
+        if (tr === null) tr = document.createElement('tr');
 
-       tr.dataset.user = JSON.stringify(dataUser);
-        
+        tr.dataset.user = JSON.stringify(dataUser);
+
         tr.innerHTML = `
         
             <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
@@ -248,44 +236,50 @@ class UserController {
 
     addEventsTr(tr) {
         tr.querySelector(".btn-delete").addEventListener('click', e => {
-            if(confirm("Deseja realmente excluir???")){
-               tr.remove(); 
-               this.updateCount();
+            if (confirm("Deseja realmente excluir???")) {
+
+                let user = new User();
+
+                user.loadFromJSON(JSON.parse(tr.dataset.user))
+
+                user.remove();
+                tr.remove();
+                this.updateCount();
             }
-        }), 
+        }),
 
-        tr.querySelector(".btn-edit").addEventListener('click', e => {
-            let json = JSON.parse(tr.dataset.user);
-            this.formUpdateEl.dataset.trIndex = tr.sectionRowIndex;
+            tr.querySelector(".btn-edit").addEventListener('click', e => {
+                let json = JSON.parse(tr.dataset.user);
+                this.formUpdateEl.dataset.trIndex = tr.sectionRowIndex;
 
-            for (let name in json) {
-                let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]");
+                for (let name in json) {
+                    let field = this.formUpdateEl.querySelector("[name=" + name.replace("_", "") + "]");
 
-                if (field) {
-                    if (field.type == 'file') continue;
-                    switch (field.type) {
-                        case 'file':
-                            continue;
-                        case 'radio':
-                            field = form.querySelector("[name=" + name.replace("_", "") + "][value" + json[name] + "]")
-                            field.checked = true;
-                            break;
-                        case 'checkbox':
-                            field.checked = json[name];
-                            break;
-                        default:
-                            field.value = json[name];
+                    if (field) {
+                        if (field.type == 'file') continue;
+                        switch (field.type) {
+                            case 'file':
+                                continue;
+                            case 'radio':
+                                field = form.querySelector("[name=" + name.replace("_", "") + "][value" + json[name] + "]")
+                                field.checked = true;
+                                break;
+                            case 'checkbox':
+                                field.checked = json[name];
+                                break;
+                            default:
+                                field.value = json[name];
 
+                        }
+
+                        field.value = json[name];
                     }
 
-                    field.value = json[name];
                 }
+                this.formUpdateEl.querySelector(".photo").src = json._photo;
 
-            }
-            this.formUpdateEl.querySelector(".photo").src = json._photo;
-
-            this.showPanelUpdate()
-        });
+                this.showPanelUpdate()
+            });
     }
 
     showPanelCreate() {
