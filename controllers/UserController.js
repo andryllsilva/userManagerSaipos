@@ -50,7 +50,9 @@ class UserController {
 
                     let user = new User();
 
-                    user.loadFromJSON(result)
+                    user.loadFromJSON(result);
+
+                    user.save();
                     
                     this.getTr(user, tr);
 
@@ -80,8 +82,6 @@ class UserController {
 
             btn.disabled = true;
 
-
-
             if (!value) {
                 btn.disabled = false;
                 return false;
@@ -90,8 +90,7 @@ class UserController {
             this.getPhoto(this.formEl).then(
                 (content) => {
                     value.photo = content;
-
-                    this.insert(value)
+                    value.save();
                     this.addLine(value);
                     this.formEl.reset()
                     btn.disabled = false;
@@ -211,17 +210,6 @@ class UserController {
         })
     }
 
-    insert(data){
-
-        let users = this.getUsersStorage()
-
-        users.push(data);
-
-
-        //sessionStorage.setItem("users",JSON.stringify(users));
-
-        localStorage.setItem("users",JSON.stringify(users));
-    }
 
     getTr(dataUser, tr = null){
        if(tr === null) tr = document.createElement('tr');

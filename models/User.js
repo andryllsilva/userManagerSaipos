@@ -1,70 +1,126 @@
 class User {
 
-  constructor(name, gender, birth, country, email, password, photo, admin){
-      this._name = name;
-      this._gerder = gender;
-      this._birth = birth;
-      this._country = country;
-      this._email = email;
-      this._password = password;
-      this._photo = photo;
-      this._admin = admin;
-      this._register = new Date()
+    constructor(name, gender, birth, country, email, password, photo, admin) {
 
-  }
+        this._id;
+        this._name = name;
+        this._gerder = gender;
+        this._birth = birth;
+        this._country = country;
+        this._email = email;
+        this._password = password;
+        this._photo = photo;
+        this._admin = admin;
+        this._register = new Date()
 
-  get name(){
-      return this._name;
-  }
+    }
 
-  get gender(){
-      return this._gerder;
-  }
+    get id() {
+        return this._id;
+    }
 
-  get birth(){
-      return this._birth;
-  }
+    get name() {
+        return this._name;
+    }
 
-  get country(){
-      return this._country;
-  }
+    get gender() {
+        return this._gerder;
+    }
 
-  get email(){
-      return this._email;
-  }
+    get birth() {
+        return this._birth;
+    }
 
-  get password(){
-      return this._password
-  }
+    get country() {
+        return this._country;
+    }
 
-  get photo(){
-      return this._photo;
-  }
+    get email() {
+        return this._email;
+    }
 
-  set photo(value){
-      return this._photo = value;
-  }
+    get password() {
+        return this._password
+    }
 
-  get admin(){
-      return this._admin;
-  }
+    get photo() {
+        return this._photo;
+    }
 
-  get register(){
-      return this._register;
-  }
+    set photo(value) {
+        return this._photo = value;
+    }
 
-  loadFromJSON(json){
-    for (let name in json){
-        switch(name){
-            case '_register':
-                this[name] = new Date(json[name]);
-                break;
+    get admin() {
+        return this._admin;
+    }
+
+    get register() {
+        return this._register;
+    }
+
+    loadFromJSON(json) {
+        for (let name in json) {
+            switch (name) {
+                case '_register':
+                    this[name] = new Date(json[name]);
+                    break;
                 default:
                     this[name] = json[name]
-        }   
+            }
+        }
     }
-  }
 
-  
+    getNewId() {
+
+        if (!window.id) window.id = 0;
+
+        id++;
+
+        return id;
+
+    }
+
+    save() {
+
+        let users = User.getUsersStorage()
+
+        if (this.id > 0) {
+            users.map(u => {
+                if (u._id === this.id) {
+
+                    u = this;
+                }
+                return u;
+            })
+        } else {
+            this._id = this.getNewId()
+
+            users.push(this);
+
+
+            //sessionStorage.setItem("users",JSON.stringify(users));
+
+            
+        }
+
+        localStorage.setItem("users", JSON.stringify(users));
+
+
+    }
+
+    static getUsersStorage() {
+        let users = [];
+
+        if (localStorage.getItem('users')) {
+
+            users = JSON.parse(localStorage.getItem('users'))
+
+        }
+
+        return users
+    }
+
+
 
 }
