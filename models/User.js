@@ -10,6 +10,7 @@ class User {
       this._photo = photo;
       this._admin = admin;
       this._register = new Date()
+
   }
 
   get name(){
@@ -50,6 +51,18 @@ class User {
 
   get register(){
       return this._register;
+  }
+
+  loadFromJSON(json){
+    for (let name in json){
+        switch(name){
+            case '_register':
+                this[name] = new Date(json[name]);
+                break;
+                default:
+                    this[name] = json[name]
+        }   
+    }
   }
 
   
